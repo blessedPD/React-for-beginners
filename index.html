@@ -9,116 +9,47 @@
     <body>
         <div id="root"></div>
     </body>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
     <script type="text/babel">
-        const root = document.getElementById("root");
         
-        //아래와 같은 UI들도 함수를 이용해서 컴포넌트로 묶을 수 있음
-        function MinutesToHours() {
-            const [amount, setAmount] = React.useState(0);
-            const [flipped, setFlipped] = React.useState(false);
-            const onChange = (event)=>{
-                setAmount(event.target.value);
-            };
-            const reset =()=>{
-                setAmount(0);
-            };
-            const onFlip = () =>{
-                reset();
-                setFlipped((current) => !current);
-            };
-            return(
-            <div>
-                
-                <div>
-                    <h3>Minutes to Hours</h3>
-                    <label htmlFor="minutes">Minutes</label>
-                    <input 
-                    value= {flipped ? amount*60 : amount}
-                    id="minutes" placeholder="Minutes" 
-                    type="number" 
-                    onChange={onChange}
-                    disabled={flipped===true}
-                    />
-                    <h4>You want to convert {amount}</h4>
-                    <label htmlFor="hours">Hours</label>
-                    <input 
-                    value = {flipped ? amount : amount/60}
-                    id = "hours" placeholder="Hours" type="number" 
-                    disabled={flipped===false}
-                    onChange={onChange}
-                    />   
-                </div>
-                <button onClick={reset}>Reset</button>
-                <button onClick={onFlip}>{flipped ? "flip" : "Turn back" }</button>
-            </div>
+        function Btn({text, changeValue, fontSize}){
+            
+            return (
+                <button 
+                    onClick = {changeValue}
+                    style={{
+                    backgroundColor:"tomato",
+                    color:"white",
+                    padding:"10px 20px",
+                    border: 0,
+                    borderRadius: 10, 
+                    fontSize:fontSize
+                }}>
+                {text}
+                </button>
             );
         }
-        function KmToMiles(){
-            const [data , dataChanger] = React.useState(0);
-            const kmChanger = (event)=>{
-                dataChanger((current)=> event.target.value);
-            };
-            const KmReset = ()=>{
-                dataChanger(0);
-            };
-            const [isKm,kmBoolChanger] = React.useState(false);
-            const KmBoolChange = ()=>{
-                kmBoolChanger((current)=>!current);
-                KmReset();
-            };
-            return (
-            <div>
-                <h3>KM to Miles</h3>
-                <label htmlFor="kilometers">Kilometers</label>
-                <input value = {isKm? data*1.6 : data} id="kilometers" type="number" 
-                placeholder="Kilometers"
-                onChange={kmChanger}
-                disabled={isKm===true}>
-                </input>
-
-                <h3>You want to convert {data} </h3>
-                <label htmlFor="miles">Miles</label>
-                <input value = {isKm? data : data/1.6} id="miles" type="number" 
-                placeholder="Miles"
-                onChange={kmChanger}
-                disabled={isKm===false}
-                >
-                </input>
-
-                <div>
-                    <button onClick={KmReset}>Reset</button>
-                    <button onClick={KmBoolChange}>Change</button>
-                </div>
-                
-            </div>
-                
-
-            );
+        
+        Btn.propTypes = {
+            text: PropTypes.string.isRequired,
+            fontSize: PropTypes.number
         }
         function App() {
-            const [index, setIndex] = React.useState("1");
-            const onSelect = (event)=>{
-                setIndex(event.target.value);
-            }
-            return(
+            const [value, setValue] = React.useState("Save Changes");
+            const changeValue = () => setValue("Revert Changes");
+        return(
             <div>
-                <h1>Super Converter</h1>
-                <select value={index} onChange={onSelect}>
-                    <option value="0">Minutes & Hours</option>   
-                    <option value="1">Km & Miles</option>
-                </select>
-                <hr />
-                {index ==="0" ? <MinutesToHours /> : null}
-                {index ==="1" ? <KmToMiles /> : null} 
+                
+                <Btn text={value} changeValue={changeValue} fontSize={18}/>
+                <Btn text= "d"/>
             </div>
             );
-        }
+        };
 
+        const root = document.getElementById("root");
         ReactDOM.render(<App />, root);
-        
-        
     </script>
 </html>
